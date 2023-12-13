@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <windows.h>
 
 typedef struct node {
@@ -8,77 +9,73 @@ typedef struct node {
 } NODE;
 
 /*
-1. 初始化的时候list 创建之后不会销毁吗，返回为什么可以  ： 因为malloc动态创建在堆上不会被销毁，普通变量创建在栈上可以销毁
+1. 初始化的时候list 创建之后不会销毁吗，返回为什么可以    可以返回指针但是不能返回值
 
 */
 
-
-/// @brief 初始化
-/// @return
 NODE* initlist(void) {
 	NODE* list = (NODE*)malloc(sizeof(NODE));
-	list ->data = 0;
-	list ->next = NULL;
-    printf("list p =%p \n",list);
-    return list;
+	list -> data = 0;
+	list -> next = list;
+	return list;
 }
 
-/// @brief 列表中传入数据
-/// @param list
-/// @param data
-void headinsert(NODE* list, int data) {
-	NODE* node = (NODE*)malloc(sizeof(NODE));
-	node ->data = data;
-	node ->next = list ->next;
-	list ->next = node;
-	list ->data++;
-}
-
-void tailinsert(NODE* list, int data) {
-	NODE* head = list;
-	NODE* node = (NODE*)malloc(sizeof(NODE));
-	node ->data =  data;
-	node->next = NULL;
-	while(list ->next) {
-		list = list -> next;
-	}
-	list ->next = node;
-	head ->data++;
+void headinsert(NODE* list,int data){
+    NODE* node = (NODE*)malloc(sizeof(NODE));
+    node ->data = data;
+    node ->next = list ->next;
+    list ->next = node;
 }
 
 
-void delete_list(NODE* list, int data) {
-	NODE* pre = list;
-	NODE* current = list -> next;
-	while (current) {
-		if(current -> data == data) {
-			pre ->next = current ->next;
-			free(current);
-			break;
-		}
-		pre = current;
-		current = current ->next;
-	}
-    list -> data--;
+void tailinsert(NODE* list,int data){
+    NODE* n = list;
+    NODE* node = (NODE*)malloc(sizeof(NODE));
+    node ->data = data;
+    node ->next = n;
+    while (n ->next !=list){
+        n = n->next;
+    }
+    n ->next = node;
 }
-
 
 void printlist(NODE* list){
-    list = list -> next;
-    while (list){
-        printf("%d \n",list -> data);
-        list = list -> next;
+    NODE* node = list ->next;
+    while (node != list){
+        printf("%d ",node ->data);
+        node = node ->next;
     }
     printf("\n");
-    
+}
+
+
+int deletelist(NODE* list,int data){
+    NODE* prenode = list;
+    NODE* node = list ->next;
+    while (node!= list){
+        if(node ->data == data){
+            prenode ->next = node ->next;
+            free(node);
+            return TRUE;
+        }
+        prenode = node;
+        node = node ->next;
+    }
+    return FALSE;
 }
 
 
 int main(void) {
     NODE* list = initlist();
-    printf("list p =%p \n",list);
     headinsert(list,1);
-    delete_list(list,2);
+    headinsert(list,2);
+    headinsert(list,3);
+    headinsert(list,4);
+    headinsert(list,5);
+    headinsert(list,6);
+    tailinsert(list,7);
+    tailinsert(list,8);
+    deletelist(list,3);
     printlist(list);
 	return 0;
 }
