@@ -5,6 +5,7 @@
 
 typedef struct node {
 	int data;
+    struct node* pre;
 	struct node* next;
 } NODE;
 
@@ -16,52 +17,64 @@ typedef struct node {
 NODE* initlist(void) {
 	NODE* list = (NODE*)malloc(sizeof(NODE));
 	list -> data = 0;
-	list -> next = list;
+	list -> next = NULL;
+    list ->pre = NULL;
 	return list;
 }
 
 void headinsert(NODE* list,int data){
     NODE* node = (NODE*)malloc(sizeof(NODE));
     node ->data = data;
-    node ->next = list ->next;
-    list ->next = node;
+    if(list -> next == NULL){
+        //链表空
+        node->next = list -> next;
+        node -> pre = list;
+        list ->next = node;
+    }else{
+        node ->pre = list;
+        node ->next = list->next;
+        list ->next ->pre = node;
+        list ->next = node;
+    }
+    
 }
 
 
 void tailinsert(NODE* list,int data){
-    NODE* n = list;
+    NODE* l = list;
     NODE* node = (NODE*)malloc(sizeof(NODE));
-    node ->data = data;
-    node ->next = n;
-    while (n ->next !=list){
-        n = n->next;
+    node -> data = data;
+    while (l -> next != NULL){
+        l = l ->next;
     }
-    n ->next = node;
-}
-
-void printlist(NODE* list){
-    NODE* node = list ->next;
-    while (node != list){
-        printf("%d ",node ->data);
-        node = node ->next;
-    }
-    printf("\n");
+    node ->next = l ->next;
+    l ->next = node;
+    node -> pre = l;
 }
 
 
 int deletelist(NODE* list,int data){
-    NODE* prenode = list;
-    NODE* node = list ->next;
-    while (node!= list){
+    NODE* node = list -> next;
+    while(node!= NULL){
         if(node ->data == data){
-            prenode ->next = node ->next;
+            //删除操作
+            node -> pre -> next = node ->next;
+            node ->next ->pre = node ->pre;
             free(node);
             return TRUE;
         }
-        prenode = node;
-        node = node ->next;
+        node = node -> next;
     }
     return FALSE;
+}
+
+void printlist(NODE* list){
+    NODE* node = list ->next;
+    while(node){
+        printf("%d -> ",node->data);
+        node = node ->next;
+    }
+    printf("NULL\n");
 }
 
 
@@ -71,11 +84,10 @@ int main(void) {
     headinsert(list,2);
     headinsert(list,3);
     headinsert(list,4);
+    headinsert(list,0);
     headinsert(list,5);
-    headinsert(list,6);
-    tailinsert(list,7);
-    tailinsert(list,8);
-    deletelist(list,3);
+    tailinsert(list,6);
+    deletelist(list,1);
     printlist(list);
 	return 0;
 }
