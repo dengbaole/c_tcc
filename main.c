@@ -17,8 +17,8 @@ typedef struct node {
 NODE* initlist(void) {
 	NODE* list = (NODE*)malloc(sizeof(NODE));
 	list -> data = 0;
-	list -> next = NULL;
-    list ->pre = NULL;
+	list -> next = list;
+    list ->pre = list;
 	return list;
 }
 
@@ -30,6 +30,7 @@ void headinsert(NODE* list,int data){
         node->next = list -> next;
         node -> pre = list;
         list ->next = node;
+        list ->pre = node;
     }else{
         node ->pre = list;
         node ->next = list->next;
@@ -44,18 +45,19 @@ void tailinsert(NODE* list,int data){
     NODE* l = list;
     NODE* node = (NODE*)malloc(sizeof(NODE));
     node -> data = data;
-    while (l -> next != NULL){
+    while (l -> next != list){
         l = l ->next;
     }
-    node ->next = l ->next;
-    l ->next = node;
+    l->next = node;
+    node -> next = list;
     node -> pre = l;
+    list -> pre = node;
 }
 
 
 int deletelist(NODE* list,int data){
     NODE* node = list -> next;
-    while(node!= NULL){
+    while(node != list){
         if(node ->data == data){
             //删除操作
             node -> pre -> next = node ->next;
@@ -70,7 +72,7 @@ int deletelist(NODE* list,int data){
 
 void printlist(NODE* list){
     NODE* node = list ->next;
-    while(node){
+    while(node!=list){
         printf("%d -> ",node->data);
         node = node ->next;
     }
@@ -87,7 +89,9 @@ int main(void) {
     headinsert(list,0);
     headinsert(list,5);
     tailinsert(list,6);
-    deletelist(list,1);
+    tailinsert(list,8);
+
+    // deletelist(list,1);
     printlist(list);
 	return 0;
 }
