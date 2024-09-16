@@ -1,85 +1,32 @@
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <windows.h>
+#include <stdint.h>
+#include <math.h>
 
-#define REGS_FOREACH(_) _(X)  _(Y)
-#define RUN_LOGIC  X1 = !X && Y;Y1 = !X&&!Y;
-#define DEFINE(X) static int X,X##1;
-#define UPDATE(X) X = X##1;
-#define PRINT(X)  printf(#X " = %d ",X);
+#define SIZE 200 // 数组大小
+#define MAX_VALUE 100 // 中间最大值
+#define PI 3.14159265358979323846
 
-
-//这里保存每个数字的值
-int main(void) {
-	REGS_FOREACH(DEFINE);
-	while (1) {
-		RUN_LOGIC;
-		REGS_FOREACH(PRINT);
-		REGS_FOREACH(UPDATE);
-		putchar('\n');
-		sleep(1000);
-	}
+void generateSPWMArray(uint16_t *spwmArray, int size) {
+    for (int i = 0; i < size; i++) {
+        // 计算正弦波值并映射到 0 到 MAX_VALUE 的范围
+        spwmArray[i] = (uint16_t)((sin((-0.25*PI+(PI * i) / (size - 1))*2) * 0.5 + 0.5) * MAX_VALUE);
+    }
 }
 
+int main(void) {
+    uint16_t spwmWave[SIZE];
 
+    generateSPWMArray(spwmWave, SIZE);
 
+    // 打印生成的 SPWM 数组，以便复制
+    printf("uint16_t spwmWave[%d] = {", SIZE);
+    for (int i = 0; i < SIZE; i++) {
+        printf("%u", spwmWave[i]);
+        if (i < SIZE - 1) {
+            printf(", ");
+        }
+    }
+    printf("};\n");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return 0;
+}
