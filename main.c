@@ -3,7 +3,7 @@
 #include <math.h>
 
 #define SIZE 200 // 数组大小
-#define MAX_VALUE 100 // 中间最大值
+#define MAX_VALUE 70 // 中间最大值
 #define PI 3.14159265358979323846
 
 void generateSPWMArray(uint16_t *spwmArray, int size) {
