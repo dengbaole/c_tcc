@@ -1,78 +1,113 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <windows.h>
 
-/// 队列先进后出
-typedef struct Node {
-	int data;
-	struct Node* next;
-} NODE;
+#define MAXSIZE 5
 
-NODE* initqueue(void) {
-	NODE* Q = (NODE*)malloc(sizeof(NODE));
-	Q ->data = 0;
-	Q ->next = NULL;
+/**
+ * define the struct of circular queue
+ */
+typedef struct Queue {
+	int front;
+	int rear;
+	int data[MAXSIZE];
+} Queue;
+
+/**
+ * init queue
+ * @return the pointer of queue
+ */
+Queue* initQueue() {
+	Queue* Q = (Queue*)malloc(sizeof(Queue));
+	Q->front = Q->rear = 0;
 	return Q;
 }
 
-//判断空队列
-int isempty(NODE* Q){
-	if(Q ->next == NULL){
+/**
+ * print all items in queue
+ * @param Q the pointer of queue
+ */
+void printQueue(Queue* Q) {
+	// 要知道队列当前有多少个元素
+	int length = (Q->rear - Q->front + MAXSIZE) % MAXSIZE;
+	int index = Q->front;
+	for (int i = 0; i < length; i++) {
+		printf("%d -> ", Q->data[index]);
+		index = (index + 1) % MAXSIZE;
+	}
+	printf("NULL\n");
+}
+
+/**
+ * judge queue is or not full
+ * @param Q the pointer of queue
+ * @return full flag
+ */
+int isFull(Queue* Q) {
+	if ((Q->rear + 1) % MAXSIZE == Q->front) {
 		return 1;
 	} else {
 		return 0;
 	}
 }
 
-
-/// @brief
-/// @param Q
-/// @param data
-/// @return
-NODE* enqueue(NODE* Q, int data) {
-	NODE* q;
-	NODE* node = (NODE*)malloc(sizeof(NODE));
-	node ->data = data;
-	while(q->next != NULL) {
-		q = q ->next;
+/**
+ * judge queue is or not empty
+ * @param Q the pointer of queue
+ * @return empty flag
+ */
+int isEmpty(Queue* Q) {
+	if (Q->front == Q->rear) {
+		return 1;
+	} else {
+		return 0;
 	}
-	node->next = q->next;
-	q ->next = node;
 }
 
+/**
+ * enqueue
+ * @param Q the pointer of queue
+ * @param data the data you want to enqueue
+ * @return success flag
+ */
+int enQueue(Queue* Q, int data) {
+	if (isFull(Q)) {
+		return 0;
+	} else {
+		Q->data[Q->rear] = data;
+		Q->rear = (Q->rear + 1) % MAXSIZE;
+		return 1;
+	}
+}
 
-int delqueue(NODE* Q) {
-	if(isempty(Q)) {
+/**
+ * dequeue
+ * @param Q the pointer of queue
+ * @return the data you want to dequeue
+ */
+int deQueue(Queue* Q) {
+	if (isEmpty(Q)) {
 		return -1;
 	} else {
-		NODE* node = Q ->next;
-		int data = node ->data;
-		Q ->next = node ->next;
-		free(node);
+		int data = Q->data[Q->front];
+		Q->front = (Q->front + 1) % MAXSIZE;
 		return data;
 	}
-
 }
 
-
-void printqueue(NODE* Q) {
-	NODE* node = Q ->next;
-	while (node) {
-		printf("%d ->", node->data);
-		node = node ->next;
-	}
-	printf("NULL");
-}
-
-int main(void) {
-	NODE* Q = initqueue();
-	enqueue(Q, 1);
-	enqueue(Q, 3);
-	enqueue(Q, 3);
-	enqueue(Q, 4);
-	delqueue(Q);
-	// delqueue(Q);
-	printqueue(Q);
+/**
+ * main function
+ * @return null
+ */
+int main() {
+	Queue* Q = initQueue();
+	enQueue(Q, 1);
+	enQueue(Q, 2);
+	enQueue(Q, 3);
+	enQueue(Q, 4);
+	enQueue(Q, 5);
+	printQueue(Q);
+	deQueue(Q);
+	enQueue(Q, 5);
+	printQueue(Q);
 	return 0;
 }
