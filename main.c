@@ -9,7 +9,7 @@ typedef struct Node {
 	struct Node* next;
 } NODE;
 
-NODE* initqueue(void){
+NODE* initqueue(void) {
 	NODE* Q = (NODE*)malloc(sizeof(NODE));
 	Q ->data = 0;
 	Q ->next = NULL;
@@ -17,24 +17,24 @@ NODE* initqueue(void){
 }
 
 
-int isempty(NODE* Q){
-	if(Q ->next == NULL){
+int isempty(NODE* Q) {
+	if(Q ->next == NULL) {
 		return 1;
-	}else{
+	} else {
 		return 0;
 	}
 }
 
 
-/// @brief 
-/// @param Q 
-/// @param data 
-/// @return 
-NODE* enqueue(NODE* Q,int data){
+/// @brief
+/// @param Q
+/// @param data
+/// @return
+NODE* enqueue(NODE* Q, int data) {
 	NODE* q;
 	NODE* node = (NODE*)malloc(sizeof(NODE));
 	node ->data = data;
-	while(q->next!=NULL){
+	while(q->next != NULL) {
 		q = q ->next;
 	}
 	node->next = q->next;
@@ -42,10 +42,10 @@ NODE* enqueue(NODE* Q,int data){
 }
 
 
-int delqueue(NODE* Q){
-	if(isempty(Q)){
-		return -1;	
-	}else{
+int delqueue(NODE* Q) {
+	if(isempty(Q)) {
+		return -1;
+	} else {
 		NODE* node = Q ->next;
 		int data = node ->data;
 		Q ->next = node ->next;
@@ -55,26 +55,24 @@ int delqueue(NODE* Q){
 
 }
 
-int test(){
-	int i = 0;
-	return i;
-}
-void printqueue(NODE* Q){
+
+void printqueue(NODE* Q) {
 	NODE* node = Q ->next;
-	while (node){
-		printf("%d ->",node->data);
+	while (node) {
+		printf("%d ->", node->data);
 		node = node ->next;
 	}
 	printf("NULL");
 }
 
-int main(void){
+int main(void) {
 	NODE* Q = initqueue();
-	enqueue(Q,1);
-	enqueue(Q,3);
-	enqueue(Q,3);
-	enqueue(Q,4);
+	enqueue(Q, 1);
+	enqueue(Q, 3);
+	enqueue(Q, 3);
+	enqueue(Q, 4);
 	delqueue(Q);
+	// delqueue(Q);
 	printqueue(Q);
 	return 0;
 }

@@ -20,36 +20,12 @@ dist:
 	./utils_bin/tcc/tcc.exe .\utils_bin\tcc\sha1\sha1.c -run .\utils_bin\dist.c $(day_version) WELCOME
 
 build:
+	@echo $(SHELL)
 	@echo [START]----- UV build -----
-	@- UV4 -b $(uvproj_path)/$(project_name).uvprojx -j0 -o ./_build/Build_Output.txt
-	@- powershell -c "cat $(uvproj_path)/_build/Build_Output.txt | sls 'error'"
-	@echo [ END ]----- UV build -----
+	tcc -run main.c
+	@echo [ END ]----- UV build ----
 
-clean:
-	@echo [START]----- UV clean -----
-	UV4 -c $(uvproj_path)/$(project_name).uvprojx -j0
-	@echo [ END ]----- UV clean -----
 
-flash:
-	@echo [START]----- UV flash -----
-	@- UV4 -f $(uvproj_path)/$(project_name).uvprojx -j0 -o ./_build/Program_Output.txt
-	@- powershell -c cat $(uvproj_path)/_build/Program_Output.txt
-	@echo [ END ]----- UV flash -----
-
-debug:
-	@echo [START]----- UV debug -----
-	UV4 -d $(uvproj_path)/$(project_name).uvprojx
-	@echo [ END ]----- UV debug -----
-
-path2macro:
-	@echo [START]----- Path TO MACRO -----
-	./utils_bin/KeilUtils-win-amd64.exe path2macro
-	@echo [ END ]----- Path TO MACRO -----
-
-macro2path:
-	@echo [START]----- MACRO TO Path -----
-	./utils_bin/KeilUtils-win-amd64.exe macro2path
-	@echo [ END ]----- MACRO TO Path -----
 
 format:
 	@echo Astyle source code format
