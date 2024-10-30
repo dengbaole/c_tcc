@@ -16,9 +16,9 @@ NODE* initqueue(void) {
 	return Q;
 }
 
-
-int isempty(NODE* Q) {
-	if(Q ->next == NULL) {
+//判断空队列
+int isempty(NODE* Q){
+	if(Q ->next == NULL){
 		return 1;
 	} else {
 		return 0;
